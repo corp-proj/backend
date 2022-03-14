@@ -10,6 +10,8 @@ scrapy = "*"
 pymongo = "*"
 gensim = "*"
 konlpy = "*"
+djangorestframework = "*"
+drf-yasg = "*"
 
 [dev-packages]
 pylint = "*"
