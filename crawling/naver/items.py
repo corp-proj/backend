@@ -8,8 +8,8 @@ import scrapy
 
 class NaverItem(scrapy.Item):
     text = scrapy.Field()
-    key = scrapy.Field()
     url = scrapy.Field()
-    rank = scrapy.Field()
     img_url = scrapy.Field()
-    related = scrapy.Field()
+    title = scrapy.Field()
+    uri = scrapy.Field()
+    

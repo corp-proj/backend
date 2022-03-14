@@ -7,6 +7,9 @@ name = "pypi"
 django = "*"
 django-environ = "*"
 scrapy = "*"
+pymongo = "*"
+gensim = "*"
+konlpy = "*"
 
 [dev-packages]
 pylint = "*"

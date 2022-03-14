@@ -11,6 +11,6 @@ from scrapy.exporters import JsonItemExporter
 
 import sys
 
-
 class NaverPipeline:
     pass
+    

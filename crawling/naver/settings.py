@@ -6,10 +6,14 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-import os
-import sys
-import django
 
+import os
+import sys 
+
+BOT_NAME = 'naver'
+
+SPIDER_MODULES = ['naver.spiders']
+NEWSPIDER_MODULE = 'naver.spiders'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 #       crawling/naver/naver위치에서 scrapy crawl cr 명령어 사용시
@@ -18,21 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.pa
 # /backend위치에서 url /hashtag/와 연결시
 
 sys.path.append(BASE_DIR)
-print(BASE_DIR)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings'
-
-django.setup()
-
-BOT_NAME = 'naver'
-
-SPIDER_MODULES = ['naver.spiders']
-NEWSPIDER_MODULE = 'naver.spiders'
 
 #encoding as 'utf-8'
 FEED_EXPORT_ENCODING = 'utf-8'
 
 # output sequence
-FEED_EXPORT_FIELDS=['rank','key','related','url','img_url','text']
+FEED_EXPORT_FIELDS=['uri','img_url','url','title','text']
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'naver (+http://www.yourdomain.com)'
@@ -98,7 +93,7 @@ ITEM_PIPELINES = {'naver.pipelines.NaverPipeline': 300,}
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
 
-# Enable and configureƒ HTTP caching (disabled by default)
+# Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 #HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
