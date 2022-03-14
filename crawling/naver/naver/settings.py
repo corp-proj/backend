@@ -11,9 +11,11 @@ import sys
 import django
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-#BASE_DIR = os.path.abspath('.')
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))  -
+#       crawling/naver/naver위치에서 scrapy crawl cr 명령어 사용시
 
+BASE_DIR = os.path.abspath('.')
+#/backend위치에서 url /hashtag/와 연결시
 
 sys.path.append(BASE_DIR)
 print(BASE_DIR)

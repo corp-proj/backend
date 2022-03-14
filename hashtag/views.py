@@ -11,6 +11,5 @@ def get_tag(request):
         process = CrawlerRunner(get_project_settings())
         results= process.crawl(rank.rank)   #type이
 
-
         print(type(results))
         return HttpResponse('none')
