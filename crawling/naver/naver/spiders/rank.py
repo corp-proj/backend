@@ -1,7 +1,7 @@
 import scrapy
 import asyncio
 import time
-from naver.items import NaverItem
+from crawling.naver.naver.items import NaverItem
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy import signals
@@ -24,11 +24,12 @@ class rank(scrapy.Spider):
     name = "cr"
     allowed_domains = ["rank.ezme.net", "naver.com"]
     start_urls = [
-        "http://rank.ezme.net/"
-    ]
+        "http://rank.ezme.net/" ]
+
 
     def parse(self, response):
         item = NaverItem()
+
         for sel in response.xpath('/html/body/div[1]/main/div/div[3]/div/div/h4/a'):
             key = sel.xpath('./b/text()').extract()
             for s in key:
@@ -118,6 +119,7 @@ class rank(scrapy.Spider):
                 new_text = new_text + ' ' + text_set[i][l]
         item['text'] = new_text
         item['img_url'] = image_set[i]
+        print("#################"+new_text)
         i = i + 1
         return item
 
@@ -125,10 +127,14 @@ class rank(scrapy.Spider):
         results = []
 
         def crawler_results(signal, sender, item, response, spider):
+
             results.append(item)
 
         dispatcher.connect(crawler_results, signal=signals.item_scraped)
         process = CrawlerProcess(get_project_settings())
         process.crawl(rank)
         process.start()
+
+
         return results
+
