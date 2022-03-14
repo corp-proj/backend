@@ -133,8 +133,7 @@ class rank(scrapy.Spider):
         dispatcher.connect(crawler_results, signal=signals.item_scraped)
         process = CrawlerProcess(get_project_settings())
         process.crawl(rank)
-        process.start()
-
+        process.start(stop_after_crawl=True, install_signal_handlers=False)
 
         return results
 

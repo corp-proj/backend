@@ -1,15 +1,13 @@
 from django.http import HttpResponse
-from scrapy.crawler import CrawlerRunner
-from scrapy.utils.project import get_project_settings
-from crawling.naver.naver.spiders import rank
+from crawling.naver.naver.spiders.rank import rank
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]), 'backend', 'crawling', 'naver'))
 
-
-#scrapyd = ScrapydAPI('http://localhost:6800')
 
 def get_tag(request):
     if request.method == 'GET':
-        process = CrawlerRunner(get_project_settings())
-        results= process.crawl(rank.rank)   #type이
-
-        print(type(results))
-        return HttpResponse('none')
+        result = rank.spider_results()
+        print(result)
+        
+        return HttpResponse(result)
