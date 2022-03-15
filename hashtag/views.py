@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+
+import json
 from crawling.module import execute, related_keyword_w2v
 import os
 import sys
@@ -8,9 +9,58 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import urllib.parse
+from requests import Request, Session
+import pprint
 
+@swagger_auto_schema(
+    operation_id="뉴스요약 & 관련키워드 조회",
+    method="POST",
+    operation_description="뉴스요약과 함께 키워드 조회",
+    responses={200: openapi.Response("OK",)},
+  #  manual_parameters=[
+   #     openapi.Parameter('key', openapi.IN_HEADER, type='string')],
+
+    request_body=openapi.Schema(
+        '뉴스전문',
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'news' : openapi.Schema('뉴스 본문', type='string'),
+            'key' : openapi.Schema('키워드', type='string')},
+    #    },
+        required=['news'])
+    )
+@api_view(['POST'])
 def get_tag(request):
-    pass
+
+    request = json.loads(request.body)
+    news = request['news']
+    keyword = request['key']
+
+    keyword = urllib.parse.quote(keyword)
+    news = urllib.parse.quote(news)
+
+    data = related_keyword_w2v(keyword, news)        #뉴스관련 키워드 생성
+
+    # 요약 api
+    s = Session()
+
+    headers = {
+        'Authorization' : "Basic a3VzaXRtczp6ZXN0QDQybWFydQ=="
+    }
+    payload = {
+        'net_input':[{
+            'article':news
+        }],
+        'extractive':False
+    }
+    url = "http://kr.textsum.42maru.com/predict"
+
+    req=Request('POST',url,data=json.dumps(payload), headers=headers)
+    res=s.send(req.prepare())
+
+    summarized = res.json()['summaries']            #결과값 받기
+
+    return Response({"summarized":summarized, "data":data})
 
 
 @swagger_auto_schema(
@@ -24,8 +74,9 @@ def get_tag(request):
 @api_view(['GET'])
 def get_news(request):
     query = request.query_params.get('query', None)
-    
+
     query = urllib.parse.quote(query)
+    print(query)
     data = execute(query)
-    
+    print(query)
     return Response(data)

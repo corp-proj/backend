@@ -1,17 +1,20 @@
 import os
 import json
-
+import datetime
+from pymongo import MongoClient
 from gensim.models.word2vec import Word2Vec
 from konlpy.tag import Okt
+import urllib
+import pandas as pd
 
 
 # return list 안에 dict
 def execute(key):
-    os.system("cd crawling; scrapy crawl cr -o a.json -a keyword="+str(key))
-    with open('./crawling/a.json', encoding='utf-8') as json_file:
+    os.system("scrapy crawl cr -o a.json -a keyword=" + str(key))
+    with open('a.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
-    os.remove('./crawling/a.json')
-    
+    os.remove('./a.json')
+
     return data
 
 
@@ -22,7 +25,7 @@ def related_keyword_w2v(keyword, text):
     data_list = []
     list1.append(text)
     data_list.append(list1)
-    
+
     for news_per_keyword in data_list:
         # 데이터 전처리
         # urllib.request.urlretrieve("https://raw.githubusercontent.com/e9t/nsmc/master/ratings.txt", filename="ratings.txt")
@@ -41,11 +44,12 @@ def related_keyword_w2v(keyword, text):
             temp_X = okt.morphs(sentence, stem=True)  # 토큰화
             temp_X = [word for word in temp_X if not word in stopwords]  # 불용어 제거
             tokenized_data.append(temp_X)
+        try:
+            # w2v 돌리기
+            model = Word2Vec(sentences=tokenized_data, vector_size=100, window=5, min_count=5, workers=4, sg=0)
+            relative_keywords = model.wv.most_similar(keyword)
+            # model.wv.vectors.shape  # shape 보기
+        except:
+            return []
 
-        # w2v 돌리기
-        model = Word2Vec(sentences=tokenized_data, vector_size=100, window=5, min_count=5, workers=4, sg=0)
-        # model.wv.vectors.shape  # shape 보기
-
-        # 테스팅
-        return model.wv.most_similar(keyword)
-
+        return related_keyword_w2v
