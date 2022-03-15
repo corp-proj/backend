@@ -36,8 +36,7 @@ def get_tag(request):
 
 
     data = related_keyword_w2v(keyword, news)  
-    print("####################")
-    print(data)   #뉴스관련 키워드 생성
+
 
     # 요약 api
     s = Session()
@@ -59,7 +58,11 @@ def get_tag(request):
     res=s.send(prepped)
     summarized = res.json()['summaries']           #결과값 받기
 
-    return Response({"summarized":summarized, "data":data})
+    keyword_array = []
+    for arr in data:
+        keyword_array.append(arr[0])
+
+    return Response({"summarized":summarized, "data":keyword_array})
 
 
 @swagger_auto_schema(
