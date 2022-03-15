@@ -17,8 +17,6 @@ import pprint
     method="POST",
     operation_description="뉴스요약과 함께 키워드 조회",
     responses={200: openapi.Response("OK",)},
-  #  manual_parameters=[
-   #     openapi.Parameter('key', openapi.IN_HEADER, type='string')],
 
     request_body=openapi.Schema(
         '뉴스전문',
@@ -26,7 +24,6 @@ import pprint
         properties={
             'news' : openapi.Schema('뉴스 본문', type='string'),
             'key' : openapi.Schema('키워드', type='string')},
-    #    },
         required=['news'])
     )
 @api_view(['POST'])
@@ -36,8 +33,6 @@ def get_tag(request):
     news = request['news']
     keyword = request['key']
 
-    keyword = urllib.parse.quote(keyword)
-    news = urllib.parse.quote(news)
 
     data = related_keyword_w2v(keyword, news)        #뉴스관련 키워드 생성
 
@@ -55,10 +50,11 @@ def get_tag(request):
     }
     url = "http://kr.textsum.42maru.com/predict"
 
-    req=Request('POST',url,data=json.dumps(payload), headers=headers)
-    res=s.send(req.prepare())
+    req=Request('POST', url, data=json.dumps(payload), headers=headers)
 
-    summarized = res.json()['summaries']            #결과값 받기
+    prepped = req.prepare()
+    res=s.send(prepped)
+    summarized = res.json()['summaries']           #결과값 받기
 
     return Response({"summarized":summarized, "data":data})
 
@@ -76,7 +72,7 @@ def get_news(request):
     query = request.query_params.get('query', None)
 
     query = urllib.parse.quote(query)
-    print(query)
+
     data = execute(query)
-    print(query)
+
     return Response(data)

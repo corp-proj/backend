@@ -10,10 +10,10 @@ import pandas as pd
 
 # return list 안에 dict
 def execute(key):
-    os.system("scrapy crawl cr -o a.json -a keyword=" + str(key))
-    with open('a.json', encoding='utf-8') as json_file:
+    os.system("cd crawling; scrapy crawl cr -o a.json -a keyword=" + str(key))
+    with open('./crawling/a.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
-    os.remove('./a.json')
+    os.remove('./crawling/a.json')
 
     return data
 
