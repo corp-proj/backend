@@ -26,6 +26,7 @@ def related_keyword_w2v(keyword, text):
     list1.append(text)
     data_list.append(list1)
 
+
     for news_per_keyword in data_list:
         # 데이터 전처리
         # urllib.request.urlretrieve("https://raw.githubusercontent.com/e9t/nsmc/master/ratings.txt", filename="ratings.txt")

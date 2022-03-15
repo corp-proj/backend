@@ -18,6 +18,7 @@ import pprint
     operation_description="뉴스요약과 함께 키워드 조회",
     responses={200: openapi.Response("OK",)},
 
+
     request_body=openapi.Schema(
         '뉴스전문',
         type=openapi.TYPE_OBJECT,
