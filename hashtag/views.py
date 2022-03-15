@@ -35,7 +35,9 @@ def get_tag(request):
     keyword = request['key']
 
 
-    data = related_keyword_w2v(keyword, news)        #뉴스관련 키워드 생성
+    data = related_keyword_w2v(keyword, news)  
+    print("####################")
+    print(data)   #뉴스관련 키워드 생성
 
     # 요약 api
     s = Session()

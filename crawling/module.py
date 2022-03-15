@@ -1,11 +1,8 @@
 import os
 import json
 import datetime
-from pymongo import MongoClient
 from gensim.models.word2vec import Word2Vec
 from konlpy.tag import Okt
-import urllib
-import pandas as pd
 
 
 # return list 안에 dict
@@ -36,7 +33,8 @@ def related_keyword_w2v(keyword, text):
         # print(train_data.isnull().values.any())  # Null 값이 존재하는지 확인
         # train_data['document'] = train_data['document'].str.replace("[^ㄱ-ㅎㅏ-ㅣ가-힣 ]", "")
         train_data = [w.replace("[^ㄱ-ㅎㅏ-ㅣ가-힣 ]", "") for w in train_data]
-        stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자', '에', '와', '한', '하다']
+        stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자',
+                    '에', '와', '한', '하다', '로', '되다', '.', '을', ',', '(', ')']
         print(train_data)  # 리스트들 출력
 
         okt = Okt()
@@ -49,8 +47,7 @@ def related_keyword_w2v(keyword, text):
             # w2v 돌리기
             model = Word2Vec(sentences=tokenized_data, vector_size=100, window=5, min_count=5, workers=4, sg=0)
             relative_keywords = model.wv.most_similar(keyword)
+            return relative_keywords
             # model.wv.vectors.shape  # shape 보기
         except:
             return []
-
-        return related_keyword_w2v
